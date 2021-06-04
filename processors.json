@@ -1,0 +1,292 @@
+{
+	"processors": [
+		{
+			"processorType": "inboundFactSheet",
+			"processorName": "Apps ",
+			"processorDescription": "Creates LeanIX Applications from Kubernetes Deployments",
+			"type": "Application",
+			"filter": {
+				"exactType": "Application"
+			},
+			"identifier": {
+				"external": {
+					"id": {
+						"expr": "${content.id}"
+					},
+					"type": {
+						"expr": "externalId"
+					}
+				}
+			},
+			"updates": [
+				{
+					"key": {
+						"expr": "name"
+					},
+					"values": [
+						{
+							"expr": "${data.name}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareHealth"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareHealth}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareHealthValues"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareHealth == null ? '' : (data.softwareHealth < 58 ? 'low': (data.softwareHealth < 78 ? 'medium': 'high'))}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "businessImpact"
+					},
+					"values": [
+						{
+							"expr": "${data.businessImpact }"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "businessImpactValues"
+					},
+					"values": [
+						{
+							"expr": "${data.businessImpact == null ? '' : (data.businessImpact < 55 ? 'low': (data.businessImpact < 75 ? 'medium': 'high'))}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "technicalDebt"
+					},
+					"values": [
+						{
+							"expr": "${data.technicalDebt }"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "cloudReady"
+					},
+					"values": [
+						{
+							"expr": "${data.cloudReady }"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "cloudReadyValues"
+					},
+					"values": [
+						{
+							"expr": "${data.cloudReady == null ? '' : (data.cloudReady < 50 ? 'low': (data.cloudReady < 70 ? 'medium': 'high'))}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareResiliency"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareResiliency }"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareResiliencyValues"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareResiliency == null ? '' : (data.softwareResiliency < 56 ? 'low': (data.softwareResiliency < 71 ? 'medium': 'high'))}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareAgility"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareAgility }"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareAgilityValues"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareAgility == null ? '' : (data.softwareAgility < 56 ? 'low': (data.softwareAgility < 71 ? 'medium': 'high'))}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareElegance"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareElegance }"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "softwareEleganceValues"
+					},
+					"values": [
+						{
+							"expr": "${data.softwareElegance == null ? '' : (data.softwareElegance < 55 ? 'low': (data.softwareElegance < 78 ? 'medium': 'high'))}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "roadblocks"
+					},
+					"values": [
+						{
+							"expr": "${data.roadblocks}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "cloudEffort"
+					},
+					"values": [
+						{
+							"expr": "${data.cloudEffort}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"processorType": "inboundFactSheet",
+			"processorName": "ITC",
+			"processorDescription": "Creates LeanIX Applications from Kubernetes Deployments",
+			"type": "ITComponent",
+			"filter": {
+				"exactType": "Component"
+			},
+			"identifier": {
+				"external": {
+					"id": {
+						"expr": "${content.id}"
+					},
+					"type": {
+						"expr": "externalId"
+					}
+				}
+			},
+			"updates": [
+				{
+					"key": {
+						"expr": "name"
+					},
+					"values": [
+						{
+							"expr": "${content.id}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"processorType": "inboundRelation",
+			"processorName": "Rel from Apps to ITComponent",
+			"processorDescription": "Creates LeanIX Relations between the created or updated Applications and ITComponents",
+			"type": "relApplicationToITComponent",
+			"filter": {
+				"exactType": "Application"
+			},
+			"from": {
+				"external": {
+					"id": {
+						"expr": "${content.id}"
+					},
+					"type": {
+						"expr": "externalId"
+					}
+				}
+			},
+			"to": {
+				"external": {
+					"id": {
+						"expr": "${integration.valueOfForEach}"
+					},
+					"type": {
+						"expr": "externalId"
+					}
+				}
+			},
+			"run": 2,
+			"forEach": "${data.recommendations}",
+			"logLevel": "debug"
+		},
+		{
+			"processorType": "inboundDocument",
+			"processorName": "Apps from Deployments",
+			"processorDescription": "My description",
+			"identifier": {
+				"external": {
+					"id": {
+						"expr": "${content.id}"
+					},
+					"type": {
+						"expr": "externalId"
+					}
+				}
+			},
+			"filter": {
+				"exactType": "Application"
+			},
+			"run": 1,
+			"updates": [
+				{
+					"key": {
+						"expr": "name"
+					},
+					"values": [
+						{
+							"expr": "Link to CAST Highlight"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "url"
+					},
+					"values": [
+						{
+							"expr": "https://rpa.casthighlight.com/#Explore/Applications/${content.id}/Detail"
+						}
+					]
+				}
+			],
+			"enabled": true,
+			"logLevel": "debug"
+		}
+	],
+	"variables": {}
+}
